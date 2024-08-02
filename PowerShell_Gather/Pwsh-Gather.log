@@ -1,0 +1,61 @@
+﻿**********************
+Windows PowerShell transcript start
+Start time: 20240802082702
+Username: HPWORKSTATION99\Deepe
+RunAs User: HPWORKSTATION99\Deepe
+Configuration Name: 
+Machine: HPWORKSTATION99 (Microsoft Windows NT 10.0.22635.0)
+Host Application: C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe
+Process ID: 4572
+PSVersion: 5.1.22621.3807
+PSEdition: Desktop
+PSCompatibleVersions: 1.0, 2.0, 3.0, 4.0, 5.0, 5.1.22621.3807
+BuildVersion: 10.0.22621.3807
+CLRVersion: 4.0.30319.42000
+WSManStackVersion: 3.0
+PSRemotingProtocolVersion: 2.3
+SerializationVersion: 1.1.0.1
+**********************
+-	Architecture = X64
+-	AssetTag =           4455
+-	BIOSReleaseDate = 01/29/2024 05:30:00
+-	BIOSVersion = Q50 Ver. 01.08.09
+-	BitlockerEncryptionMethod = N/A
+-	DefaultGateway = 192.168.0.1
+-	IPAddress = 192.168.0.127
+-	IsBDE = False
+-	IsCoffeeLakeOrLater = False
+-	IsDesktop = True
+-	IsLaptop = False
+-	IsOnBattery = False
+-	IsOnEthernet = False
+-	IsServer = False
+-	IsTablet = False
+-	IsVM = False
+-	MacAddress = 98:BD:54:99:AA:EF
+-	Make = HP
+-	Memory = 65344.65625
+-	Model = HP Z2 Mini G4 Workstation
+-	OSBuildNumber = 22635.3807
+-	OSCurrentBuild = 22635
+-	OSCurrentVersion = 10.0.22635
+-	OsInWinPE = False
+-	OsLocale = te-IN
+-	OsTimeZone = (UTC+05:30) Chennai, Kolkata, Mumbai, New Delhi
+-	OsWindowsInstallationType = Client
+-	OsWindowsProductName = Windows 10 Pro
+-	ProcessorFamily = 2286
+-	ProcessorManufacturer = GenuineIntel
+-	ProcessorName = Intel(R) Core(TM) Xeon-E-2286G @ 4.0GHz
+-	ProcessorSpeed = 3192
+-	Product = 8458
+-	SerialNumber = 5DF0234FGJ
+-	SystemSKU = 9SP50UC#ACJ
+-	UUID = 2D940A37-2017-00D3-523B-5444D222B6DE
+-	Vendor = HP
+-	VMPlatform = N/A
+
+**********************
+Windows PowerShell transcript end
+End time: 20240802083153
+**********************
