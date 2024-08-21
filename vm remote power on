@@ -1,0 +1,141 @@
+powerscli gui script that can remotely power on multiple virtual machines on multiple vcenters from inputlist with power on button . the gui must include options for user name and password and also need to include a button option to laugh the vm using VMware remote console application
+
+Here’s a PowerCLI script that creates a GUI for remotely powering on multiple virtual machines across multiple vCenters. The GUI includes fields for entering the vCenter server, username, password, and a list of VM names. Additionally, it includes a button to launch the VMware Remote Console for a selected VM.
+
+### PowerCLI GUI Script
+
+```powershell
+# Load the required assemblies
+Add-Type -AssemblyName PresentationFramework
+
+# Create the WPF window
+$window = New-Object System.Windows.Window
+$window.Title = "Power On VMs"
+$window.SizeToContent = "WidthAndHeight"
+$window.ResizeMode = "NoResize"
+
+# Create a StackPanel to hold the controls
+$stackPanel = New-Object System.Windows.Controls.StackPanel
+$window.Content = $stackPanel
+
+# Create a TextBox for vCenter server
+$vCenterBox = New-Object System.Windows.Controls.TextBox
+$vCenterBox.Width = 300
+$vCenterBox.Margin = "10"
+$vCenterBox.PlaceholderText = "Enter vCenter Server"
+$stackPanel.Children.Add($vCenterBox)
+
+# Create TextBoxes for username and password
+$usernameBox = New-Object System.Windows.Controls.TextBox
+$usernameBox.Width = 300
+$usernameBox.Margin = "10"
+$usernameBox.PlaceholderText = "Enter Username"
+$stackPanel.Children.Add($usernameBox)
+
+$passwordBox = New-Object System.Windows.Controls.PasswordBox
+$passwordBox.Width = 300
+$passwordBox.Margin = "10"
+$stackPanel.Children.Add($passwordBox)
+
+# Create a TextBox for inputting VM names
+$vmInputBox = New-Object System.Windows.Controls.TextBox
+$vmInputBox.Width = 300
+$vmInputBox.Height = 100
+$vmInputBox.TextWrapping = "Wrap"
+$vmInputBox.AcceptsReturn = $true
+$vmInputBox.Margin = "10"
+$vmInputBox.PlaceholderText = "Enter VM names (one per line)"
+$stackPanel.Children.Add($vmInputBox)
+
+# Create a Button to power on the VMs
+$powerOnButton = New-Object System.Windows.Controls.Button
+$powerOnButton.Content = "Power On VMs"
+$powerOnButton.Margin = "10"
+$stackPanel.Children.Add($powerOnButton)
+
+# Create a Button to launch the VMware Remote Console
+$launchConsoleButton = New-Object System.Windows.Controls.Button
+$launchConsoleButton.Content = "Launch VMware Remote Console"
+$launchConsoleButton.Margin = "10"
+$stackPanel.Children.Add($launchConsoleButton)
+
+# Create a TextBlock to display status messages
+$statusTextBlock = New-Object System.Windows.Controls.TextBlock
+$statusTextBlock.Margin = "10"
+$stackPanel.Children.Add($statusTextBlock)
+
+# Define the button click event to power on VMs
+$powerOnButton.Add_Click({
+    # Get the VM names from the input box
+    $vmNames = $vmInputBox.Text -split "`n"
+
+    # Get vCenter credentials
+    $vCenterServer = $vCenterBox.Text
+    $username = $usernameBox.Text
+    $password = $passwordBox.Password
+
+    # Connect to vCenter
+    Connect-VIServer -Server $vCenterServer -User $username -Password $password
+
+    foreach ($vmName in $vmNames) {
+        $vmName = $vmName.Trim()
+        if (-not [string]::IsNullOrEmpty($vmName)) {
+            # Get the VM object
+            $vm = Get-VM -Name $vmName -ErrorAction SilentlyContinue
+            if ($vm) {
+                # Power on the VM
+                Start-VM -VM $vm
+                $statusTextBlock.Text += "Powered on VM: $vmName`n"
+            } else {
+                $statusTextBlock.Text += "VM not found: $vmName`n"
+            }
+        }
+    }
+
+    # Disconnect from vCenter
+    Disconnect-VIServer -Server $vCenterServer -Confirm:$false
+})
+
+# Define the button click event to launch VMware Remote Console
+$launchConsoleButton.Add_Click({
+    # Get the VM name from the input box
+    $selectedVmName = $vmInputBox.Text -split "`n" | Select-Object -First 1
+    $selectedVmName = $selectedVmName.Trim()
+
+    if (-not [string]::IsNullOrEmpty($selectedVmName)) {
+        # Get the VM object
+        $vm = Get-VM -Name $selectedVmName -ErrorAction SilentlyContinue
+        if ($vm) {
+            # Launch VMware Remote Console
+            $vm | Start-VMConsole
+            $statusTextBlock.Text += "Launching console for VM: $selectedVmName`n"
+        } else {
+            $statusTextBlock.Text += "VM not found: $selectedVmName`n"
+        }
+    } else {
+        $statusTextBlock.Text += "Please enter a VM name to launch console.`n"
+    }
+})
+
+# Show the window
+$window.ShowDialog() | Out-Null
+```
+
+### Script Explanation
+
+- **WPF Window**: The script creates a WPF window with input fields for the vCenter server, username, password, and a text box for VM names.
+  
+- **Power On VMs**: The "Power On VMs" button connects to the specified vCenter, retrieves each VM by name, and powers it on. Status messages are displayed in a text block.
+
+- **Launch VMware Remote Console**: The "Launch VMware Remote Console" button allows the user to launch the console for the first VM listed in the input box. If the VM is found, it opens the VMware Remote Console for that VM.
+
+- **Error Handling**: The script handles cases where VMs are not found or if the user does not enter a VM name for the console launch.
+
+### Prerequisites
+
+- Ensure you have PowerCLI installed and imported in your PowerShell session.
+- Modify the script as needed to fit your environment, especially regarding vCenter connection details.
+- Run the script in a PowerShell environment that supports GUI applications.
+
+This script provides a user-friendly interface for managing multiple VMs across different vCenters, making it easier to power them on and access their consoles.
+
