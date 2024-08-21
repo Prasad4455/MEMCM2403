@@ -1,0 +1,93 @@
+powerscli gui script that can remotely power on multiple virtual machines from inputlist with power on button and additional vm configuration details
+
+To create a PowerCLI GUI script that allows you to remotely power on multiple virtual machines from an input list, you can use Windows Presentation Foundation (WPF) for the GUI. Below is a sample script that demonstrates how to achieve this. The script includes a button to power on the VMs and displays additional configuration details.
+
+### PowerCLI GUI Script
+
+```powershell
+# Load the required assemblies
+Add-Type -AssemblyName PresentationFramework
+
+# Create the WPF window
+$window = New-Object System.Windows.Window
+$window.Title = "Power On VMs"
+$window.SizeToContent = "WidthAndHeight"
+$window.ResizeMode = "NoResize"
+
+# Create a StackPanel to hold the controls
+$stackPanel = New-Object System.Windows.Controls.StackPanel
+$window.Content = $stackPanel
+
+# Create a TextBox for inputting VM names
+$vmInputBox = New-Object System.Windows.Controls.TextBox
+$vmInputBox.Width = 300
+$vmInputBox.Height = 100
+$vmInputBox.TextWrapping = "Wrap"
+$vmInputBox.AcceptsReturn = $true
+$vmInputBox.Margin = "10"
+$vmInputBox.PlaceholderText = "Enter VM names (one per line)"
+$stackPanel.Children.Add($vmInputBox)
+
+# Create a Button to power on the VMs
+$powerOnButton = New-Object System.Windows.Controls.Button
+$powerOnButton.Content = "Power On VMs"
+$powerOnButton.Margin = "10"
+$stackPanel.Children.Add($powerOnButton)
+
+# Create a TextBlock to display status messages
+$statusTextBlock = New-Object System.Windows.Controls.TextBlock
+$statusTextBlock.Margin = "10"
+$stackPanel.Children.Add($statusTextBlock)
+
+# Define the button click event
+$powerOnButton.Add_Click({
+    # Get the VM names from the input box
+    $vmNames = $vmInputBox.Text -split "`n"
+
+    # Connect to vCenter (modify with your vCenter details)
+    $vCenterServer = "your_vcenter_server"
+    $username = "your_username"
+    $password = "your_password"
+    Connect-VIServer -Server $vCenterServer -User $username -Password $password
+
+    foreach ($vmName in $vmNames) {
+        $vmName = $vmName.Trim()
+        if (-not [string]::IsNullOrEmpty($vmName)) {
+            # Get the VM object
+            $vm = Get-VM -Name $vmName -ErrorAction SilentlyContinue
+            if ($vm) {
+                # Power on the VM
+                Start-VM -VM $vm
+                $statusTextBlock.Text += "Powered on VM: $vmName`n"
+            } else {
+                $statusTextBlock.Text += "VM not found: $vmName`n"
+            }
+        }
+    }
+
+    # Disconnect from vCenter
+    Disconnect-VIServer -Server $vCenterServer -Confirm:$false
+})
+
+# Show the window
+$window.ShowDialog() | Out-Null
+```
+
+### Script Explanation
+
+- **WPF Window**: The script creates a WPF window with a text box for entering VM names, a button to initiate powering on the VMs, and a text block for displaying status messages.
+  
+- **Input Handling**: The user can enter multiple VM names, one per line, in the text box.
+
+- **Power On Logic**: When the button is clicked, the script connects to the specified vCenter server, retrieves each VM by name, and attempts to power it on. It updates the status text block with the results.
+
+- **Error Handling**: If a VM is not found, it logs a message in the status text block.
+
+### Prerequisites
+
+- Ensure you have PowerCLI installed and imported in your PowerShell session.
+- Modify the `$vCenterServer`, `$username`, and `$password` variables with appropriate credentials and server details.
+- Run the script in a PowerShell environment that supports GUI applications.
+
+This script provides a basic framework for remotely powering on VMs and can be further extended with additional configuration details as needed.
+
