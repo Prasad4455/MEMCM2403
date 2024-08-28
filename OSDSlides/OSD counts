@@ -1,0 +1,24 @@
+To calculate the average number of devices that might be re-imaged or repurposed daily in an organization with 350,000 devices, we need to consider several factors, such as the frequency of re-imaging, device lifecycle, and any major events like software updates or security breaches that might necessitate mass re-imaging.
+
+### Assumptions
+1. **Device Lifecycle**: Assume a typical lifecycle of 3 years (1,095 days) for each device before it is re-imaged or repurposed.
+2. **Re-imaging Frequency**: Not all devices are re-imaged annually. However, we can assume that a certain percentage might require re-imaging due to performance issues, updates, or repurposing.
+3. **Events Requiring Mass Re-imaging**: Occasionally, large-scale updates, security patches, or migrations might cause a spike in re-imaging.
+
+### Calculation
+1. **Total Devices**: 350,000
+2. **Device Lifecycle (in days)**: 1,095 days (3 years)
+3. **Average Daily Re-imaging**: If devices are evenly distributed over 3 years for re-imaging:
+
+\[
+\text{Average Daily Re-imaging} = \frac{\text{Total Devices}}{\text{Device Lifecycle in days}} = \frac{350,000}{1,095} \approx 319.18
+\]
+
+So, on average, about **319 devices** might be re-imaged or repurposed daily in an organization of this size under normal circumstances.
+
+### Considerations
+- **Routine Maintenance**: This number might fluctuate based on the number of routine maintenance activities, system upgrades, and critical security patches.
+- **Event-driven Re-imaging**: If there is a major event requiring a rapid response (e.g., a security breach), the number could be significantly higher on those specific days.
+
+### Final Answer
+On average, about **319 devices per day** might be re-imaged or repurposed in an organization with 350,000 devices. However, this number can vary depending on specific organizational practices and unexpected events.
