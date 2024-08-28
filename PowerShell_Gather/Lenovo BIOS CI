@@ -1,0 +1,47 @@
+how to change bios settings on a Lenovo pc using SCCM CI
+
+To change BIOS settings on a Lenovo PC using System Center Configuration Manager (SCCM) Configuration Items (CI), you can follow these general steps:
+
+## **Preparation**
+
+1. **Understand Lenovo's BIOS Management Tools**: Lenovo does not provide a direct client configuration utility like Dell's CCTK. Instead, you need to use scripting methods, such as PowerShell or VBS, to manage BIOS settings. Lenovo provides a WMI class `lenovo_biossetting` that can be used to script BIOS changes[2].
+
+2. **Gather Required Tools and Scripts**: You can use PowerShell scripts to manage BIOS settings. For example, the `Get-LenovoBIOSSettings` and `Set-LenovoBIOSSettings` PowerShell functions can be used to retrieve and apply BIOS settings, respectively[2][4].
+
+## **Steps to Change BIOS Settings**
+
+### **1. Create Configuration Data**
+
+- **Manual Configuration**: First, manually configure the BIOS settings on a test Lenovo PC. This will allow you to extract the current settings format.
+- **Extract Settings**: Use the `Get-LenovoBIOSSettings` PowerShell function to dump the BIOS settings to a text file. The command might look like this:
+  ```powershell
+  Get-LenovoBIOSSettings -ComputerName 'Test-Lenovo-PC'
+  ```
+  This will create a log file with all the BIOS settings[2].
+
+### **2. Prepare the Deployment Script**
+
+- **Edit the Script**: Open the log file and select the settings you want to deploy. Add these settings as strings in a list within your deployment script.
+- **Apply Settings**: Use the `Set-LenovoBIOSSettings` function to apply the desired settings. Ensure the script is correctly formatted to avoid errors[2].
+
+### **3. Deploy via SCCM**
+
+- **Create a Configuration Item (CI)**: Use the SCCM console to create a new CI that includes your deployment script. You can use the Lenovo Configuration Pack Editor to help create and manage configuration data[1].
+- **Assign the CI to a Collection**: Assign the configuration item to a collection of Lenovo PCs that require the BIOS settings update.
+- **Evaluate Compliance**: Ensure that the SCCM client evaluates the configuration item to check compliance and apply the settings[1].
+
+### **4. Troubleshooting**
+
+- **Logging and Error Handling**: Add logging to your script to capture any errors during deployment. This can help in diagnosing issues such as incorrect setting formats or deployment failures[3].
+- **Reboot Requirements**: Some BIOS settings changes may require a system reboot to take effect. Plan your deployment accordingly to include necessary reboots[3].
+
+By following these steps, you can effectively manage and change BIOS settings on Lenovo PCs using SCCM CI. Always ensure that you have backups and a rollback plan in case of any issues during deployment.
+
+Citations:
+[1] [PDF] Lenovo Configuration Pack for Microsoft System Center ... https://pubs.lenovo.com/lxci-configpack-sccm/lxci_configpack_sccm_v6.3.0_iug.pdf
+[2] Deploy Lenovo BIOS Settings - Adam's Site https://adameyob.com/2014/11/02/deploy-lenovo-bios-settings/
+[3] Lenovo Bios-Config Utility : r/SCCM - Reddit https://www.reddit.com/r/SCCM/comments/ukq4nq/lenovo_biosconfig_utility/
+[4] Manage Lenovo BIOS with Powershell (During OSD with SCCM) https://www.imab.dk/manage-lenovo-bios-with-powershell-during-osd-with-configmgr/
+[5] List and change BIOS settings with PowerShell - Syst & Deploy https://www.systanddeploy.com/2019/03/list-and-change-bios-settings-with.html
+[6] Lenovo-BIOS-Configurator/Config-LenovoBIOS.ps1 at main - GitHub https://github.com/imabdk/Lenovo-BIOS-Configurator/blob/main/Config-LenovoBIOS.ps1
+[7] Set BIOS settings with a Compliance Baseline in ConfigMgr - LinkedIn https://www.linkedin.com/pulse/set-bios-settings-compliance-baseline-configmgr-erwin-klaver
