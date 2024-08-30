@@ -1,0 +1,32 @@
+how to make vcenter VM customisation with out installing VMware tools on the guest
+
+To customize a virtual machine (VM) in vCenter without installing VMware Tools on the guest operating system, you can use the following workaround:
+
+1. **Deploy the VM from a template** or clone an existing VM.
+
+2. **After the deployment is complete**, right-click the new VM and select **Guest OS > Customize Guest OS**[3].
+
+3. **In the Customize Guest OS dialog**, select the desired customization specification and click OK[3].
+
+4. **If prompted**, enter any additional required settings, such as IP address or hostname[3].
+
+The key points are:
+
+- **Customization is done after deployment**, not during the deployment process[3].
+- **VMware Tools is not required** on the guest OS for this post-deployment customization[3].
+- **A customization specification must be created beforehand** with the desired settings[1][2].
+
+However, keep in mind that this workaround has some limitations compared to using VMware Tools for customization:
+
+- **The customization specification cannot include a customization script** to run inside the guest OS[6].
+- **Certain advanced customization options may not be available**, such as setting the computer name or joining a domain[1][2].
+
+So in summary, while you can customize a VM without VMware Tools using this method, it provides a more limited set of options compared to installing VMware Tools on the guest OS and using the built-in customization functionality. The best approach depends on your specific requirements and guest OS.
+
+Citations:
+[1] Create and Manage Customization Specifications for Windows and Linux https://docs.vmware.com/en/VMware-vSphere/8.0/vsphere-vm-administration/GUID-EB5F090E-723C-4470-B640-50B35D1EC016.html
+[2] Creating and Managing Customization Specifications https://docs.vmware.com/en/VMware-vSphere/7.0/com.vmware.vsphere.vm_admin.doc/GUID-EB5F090E-723C-4470-B640-50B35D1EC016.html
+[3] Apply a Customization Specification to an Existing Virtual Machine https://docs.vmware.com/en/VMware-vSphere/8.0/vsphere-vm-administration/GUID-C949426E-CF0C-436D-AF8B-A5D845A8FEA1.html
+[4] Configure General Virtual Machine Options - VMware Docs https://docs.vmware.com/en/VMware-vSphere/7.0/com.vmware.vsphere.vm_admin.doc/GUID-67437893-D30D-4948-AAC6-53DD68429192.html
+[5] VM Customisation does not start automatically after deploying from ... https://community.broadcom.com/vmware-cloud-foundation/discussion/vm-customisation-does-not-start-automatically-after-deploying-from-template-in-67
+[6] Create a Customization Specification for Linux https://docs.vmware.com/en/VMware-vSphere/7.0/com.vmware.vsphere.vm_admin.doc/GUID-9A5093A5-C54F-4502-941B-3F9C0F573A39.html
