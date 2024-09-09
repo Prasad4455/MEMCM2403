@@ -1,0 +1,12 @@
+Managing GuestInfo Variables with PowerCLI
+1. Setting a GuestInfo Variable
+To set a guestinfo variable for a VM, you can use the Set-VM cmdlet with the -ExtensionData parameter:
+powershell
+$vm = Get-VM -Name "YourVMName"
+$spec = New-Object VMware.Vim.VirtualMachineConfigSpec
+$spec.ExtraConfig += New-Object VMware.Vim.OptionValue
+$spec.ExtraConfig[0].Key = "guestinfo.yourkey"
+$spec.ExtraConfig[0].Value = "yourvalue"
+$vm.ExtensionData.ReconfigVM($spec)
+
+This script creates a new configuration specification, adds an OptionValue for the guestinfo variable, and applies it to the VM
