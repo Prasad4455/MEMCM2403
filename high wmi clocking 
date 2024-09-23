@@ -1,0 +1,96 @@
+GPO polices are not getting applied when WMI provider service is using 100% cpu clock cycles on virtual machine. 
+
+What is the possible root cause and how to identify the root cause give me detailed steps including know solution
+
+High CPU usage by the WMI Provider Host (WmiPrvSE.exe) can significantly affect the application of Group Policy Objects (GPOs) on a virtual machine. When WMI services are overloaded, they may fail to process requests, leading to GPOs not being applied correctly. Below are detailed steps to identify the root cause and potential solutions.
+
+## Possible Root Causes
+
+1. **Excessive WMI Queries**: Another application or service may be making too many requests to WMI, causing high CPU usage.
+  
+2. **Corrupted WMI Repository**: The WMI repository may be corrupted, leading to failures in processing queries.
+
+3. **Service Configuration Issues**: The Windows Management Instrumentation (WMI) service or its dependencies may not be configured correctly.
+
+4. **Malware**: Malicious software may disguise itself as a legitimate WMI process, consuming resources.
+
+5. **Recent Windows Updates**: Sometimes, updates can introduce bugs that affect service performance.
+
+## Steps to Identify the Root Cause
+
+### 1. Check CPU Usage
+
+- Open **Task Manager** (Ctrl + Shift + Esc).
+- Go to the **Processes** tab and observe the CPU usage of `WmiPrvSE.exe`.
+- Note any patterns in CPU spikes and correlate them with specific tasks or applications running on the VM.
+
+### 2. Use Event Viewer
+
+- Open **Event Viewer** by right-clicking the Start button and selecting it.
+- Navigate to **Applications and Service Logs > Microsoft > Windows > WMI-Activity > Operational**.
+- Look for recent "Error" events that may indicate which process is causing high CPU usage. Check for `ClientProcessId` in the event details.
+
+### 3. Identify Problematic Processes
+
+- Once you have the `ClientProcessId`, open Task Manager again.
+- Go to the **Details** tab and locate the process using that PID.
+- Investigate this process further; it might be misbehaving or making excessive WMI calls.
+
+### 4. Restart WMI Services
+
+To refresh the WMI service, use the following commands in an elevated Command Prompt:
+
+```bash
+net stop Winmgmt
+net start Winmgmt
+```
+
+This can help if the service is stuck in a problematic state.
+
+### 5. Check Service Configuration
+
+- Ensure that the WMI service is set to **Automatic** startup:
+  - Open **Services.msc**.
+  - Locate **Windows Management Instrumentation**, right-click, and select **Properties**.
+  - Set the **Startup type** to **Automatic** and ensure it is running.
+
+### 6. Verify System Integrity
+
+Run a system file check to ensure there are no corrupted files:
+
+```bash
+sfc /scannow
+```
+
+### 7. Malware Scan
+
+Run a full antivirus scan to check for malware that might be affecting system performance.
+
+### 8. Isolate WMI Providers
+
+If you suspect a specific WMI provider is causing issues, you can isolate it:
+
+1. Use `wmic` command-line tool to list loaded providers.
+2. Configure problematic providers to run in their own instance of `WmiPrvSE.exe`.
+
+### 9. Update Drivers and Software
+
+Ensure all drivers and relevant software are up-to-date, as outdated drivers can sometimes lead to high resource usage.
+
+## Solutions for High CPU Usage
+
+- If a specific application is identified as problematic, consider updating or uninstalling it.
+  
+- Restarting the virtual machine can sometimes resolve transient issues related to resource usage.
+
+- If issues persist, consider using advanced tools like **ProcDump** to capture dumps of high CPU processes for further analysis.
+
+By following these steps, you should be able to identify and resolve issues related to high CPU usage by the WMI Provider Host, thereby allowing GPO policies to apply correctly on your virtual machine.
+
+Citations:
+[1] What Is the WMI Provider Host (WmiPrvSE.exe), and Why Is It ... https://www.howtogeek.com/332838/what-is-the-wmi-provider-host-wmiprvseexe-and-why-is-it-using-so-much-cpu/
+[2] Why is this happening to me : r/windows - Reddit https://www.reddit.com/r/windows/comments/1bcd8l7/why_is_this_happening_to_me/
+[3] WMI Provider Host CPU 100% issue. - Microsoft Community https://answers.microsoft.com/en-us/windows/forum/all/wmi-provider-host-cpu-100-issue/70a819e6-0141-464f-9e3e-590c5e3959f1
+[4] Solved: Problems with GPUPdate and Group Policy - Experts Exchange https://www.experts-exchange.com/questions/27813869/Problems-with-GPUPdate-and-Group-Policy.html
+[5] GPOs not Applying - Windows Server - Bleeping Computer https://www.bleepingcomputer.com/forums/t/646341/gpos-not-applying/
+[6] Troubleshoot WMI high CPU usage issues - Windows Server https://learn.microsoft.com/en-us/troubleshoot/windows-server/system-management-components/troubleshoot-wmi-high-cpu-issues
